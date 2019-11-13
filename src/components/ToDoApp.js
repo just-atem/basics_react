@@ -1,13 +1,25 @@
+import React from "react";
+import AddOption from "./AddOption";
+import Action from "./Action";
+import Header from "./Header";
+import Options from "./Options";
+import OptionModal from "./OptionModal";
+
 class TodoApp extends React.Component {
     constructor(props){
-        super(props)
-        this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
-        this.handlePick = this.handlePick.bind(this)
-        this.handleData =this.handleData.bind(this)
-        this.handleDeleteOption = this.handleDeleteOption.bind(this)
+        super(props);
+        this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
+        this.handlePick = this.handlePick.bind(this);
+        this.handleData =this.handleData.bind(this);
+        this.handleDeleteOption = this.handleDeleteOption.bind(this);
+        this.handleClearSelectedOptions = this.handleClearSelectedOptions.bind(this);
         this.state = {
-            options: []
+            options: [],
+            selectedOption: null
         }
+    }
+    handleClearSelectedOptions(){
+        this.setState(() => ({selectedOption: null}));
     }
 
     handleDeleteOptions() {
@@ -31,7 +43,9 @@ class TodoApp extends React.Component {
     handlePick () {
         const randomNum = Math.floor(Math.random() * this.state.options.length);
         const option = this.state.options [randomNum];
-        alert (option);
+        this.setState(() => ({
+            selectedOption: option
+        }));
     }
     handleData (option) {
         if (!option) {
@@ -68,12 +82,14 @@ class TodoApp extends React.Component {
         const title = 'Todo App';
         const subtitle = 'Business Goals';  // const options = ['Thing one', 'Thing two', 'Thing three'];
         return (
-                <div>
+         <div>
                     <Header title = {title} subtitle = {subtitle} />
+            <div className="container">
                     <Action
                     hasOption = {this.state.options.length > 0}
                     handlePick = {this.handlePick}
                     />
+                <div className="widget">
                     <Options 
                     options = {this.state.options}
                     handleDeleteOptions = {this.handleDeleteOptions}
@@ -81,6 +97,14 @@ class TodoApp extends React.Component {
                     />
                     <AddOption handleData = {this.handleData} />
                 </div>
+            </div>
+                    <OptionModal 
+                    selectedOption={this.state.selectedOption}
+                    handleClearSelectedOptions={this.handleClearSelectedOptions} />
+        
+        </div>
         )
     }
 }
+
+export default TodoApp;
